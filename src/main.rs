@@ -97,7 +97,7 @@ async fn chapta(_req: HttpRequest) -> impl Responder {
             let _uuid = Uuid::new_v4().to_string();
             let mut map = HASHMAP.lock().unwrap();
             if map.len() >= MAX_COUNTER as usize {
-                format!("{:?}", "cha counter bigger than 10^7, retry later!!!")
+                format!("{:?}", "cha counter bigger than 10^7, retry later!!!");
             }
             map.insert((&*_uuid).parse().unwrap(), ChaValue { value: c.0, exp_at: Local::now().add(chrono::Duration::minutes(3)) });
             HttpResponse::Ok().json(Img::new(String::from("data:image/png;base64,") + &*encode(c.1), _uuid.to_string()))
@@ -191,7 +191,7 @@ async fn main() -> std::io::Result<()> {
                     .route("view", web::get().to(view))
             )
     })
-        .bind("0.0.0.0:8089")?
+        .bind("0.0.0.0:8088")?
         .run()
         .await
 }
