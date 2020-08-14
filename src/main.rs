@@ -76,7 +76,7 @@ async fn cha(_req: HttpRequest) -> impl Responder {
     println!("{:?}", pic.chars());
     match pic.as_tuple() {
         Some(c) => {
-            HttpResponse::Ok().header("content-type", "image").body(c.1)
+            HttpResponse::Ok().header("content-type", "image.toml").body(c.1)
         },
         None => {
             HttpResponse::InternalServerError().body("failed")
@@ -91,7 +91,6 @@ async fn chapta(_req: HttpRequest) -> impl Responder {
         .apply_filter(Wave::new(1.0, 10.0))
         .view(160, 60)
         .apply_filter(Cow::new().min_radius(20).max_radius(20).circles(1).area(Geometry::new(10, 100, 30, 30)));
-    println!("{:?}", pic.chars());
     match pic.as_tuple() {
         Some(c) => {
             let _uuid = Uuid::new_v4().to_string();
@@ -100,7 +99,7 @@ async fn chapta(_req: HttpRequest) -> impl Responder {
                 format!("{:?}", "cha counter bigger than 10^7, retry later!!!");
             }
             map.insert((&*_uuid).parse().unwrap(), ChaValue { value: c.0, exp_at: Local::now().add(chrono::Duration::minutes(3)) });
-            HttpResponse::Ok().json(Img::new(String::from("data:image/png;base64,") + &*encode(c.1), _uuid.to_string()))
+            HttpResponse::Ok().json(Img::new(String::from("data:image.toml/png;base64,") + &*encode(c.1), _uuid.to_string()))
         },
         None => {
             HttpResponse::InternalServerError().body("failed")
@@ -173,22 +172,22 @@ async fn main() -> std::io::Result<()> {
             map.retain(|_key, value| {
                 Local::now().lt(&value.exp_at)
             });
-            // println!("capacity:{:?}", map.len());
+            println!("capacity:{:?}", map.len());
         }
     });
 
     HttpServer::new(move || {
         App::new()
             .app_data(counter.clone())
-            .wrap(Logger::default())
+            // .wrap(Logger::default())
             // .wrap(Logger::new("%a %{User-Agent}i"))
             .service(
                 web::scope("/app")
                     .route("cha", web::get().to(chapta))
                     .route("img", web::get().to(cha))
                     .route("verify", web::post().to(verify))
-                    .route("index", web::get().to(_index))
-                    .route("view", web::get().to(view))
+                    // .route("index", web::get().to(_index))
+                    // .route("view", web::get().to(view)) //only for debug
             )
     })
         .bind("0.0.0.0:8088")?
