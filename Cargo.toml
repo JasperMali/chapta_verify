@@ -1,0 +1,19 @@
+[package]
+name = "captcha_service"
+version = "0.1.0"
+authors = ["mali <starrymanjasper@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+captcha = "*"
+base64 = "0.12.3"
+actix-web = "2.0"
+actix-rt = "1.0"
+serde_json = "1.0.57"
+serde = "1.0.114"
+env_logger = "0.7.1"
+uuid = { version = "0.8", features = ["serde", "v4"] }
+lazy_static = "*"
+chrono = { version = "0.4", features = ["serde"] }
