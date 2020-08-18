@@ -179,7 +179,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(counter.clone())
-            // .wrap(Logger::default())
+            .wrap(Logger::default())
             // .wrap(Logger::new("%a %{User-Agent}i"))
             .service(
                 web::scope("/app")
